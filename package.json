@@ -1,22 +1,25 @@
 {
-  "name": "mcp-starter",
-  "version": "0.1.0",
-  "author": "mnove",
+  "name": "tailgrids-mcp-server",
+  "version": "1.0.0",
+  "author": "alkevintan",
   "keywords": [
     "mcp",
     "model-context-protocol",
+    "tailgrids",
+    "tailwind",
+    "ui-components",
     "ai",
     "claude",
     "server"
   ],
   "license": "MIT",
-  "description": "MCP (Model Context Protocol) server starter template ",
+  "description": "MCP (Model Context Protocol) server for TailGrids component library - provides AI access to TailGrids documentation and components",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mnove/mcp-server-starter.git"
+    "url": "git+https://github.com/alkevintan/tailgrids-mcp-server.git"
   },
   "bugs": {
-    "url": "https://github.com/mnove/mcp-server-starter/issues"
+    "url": "https://github.com/alkevintan/tailgrids-mcp-server/issues"
   },
   "scripts": {
     "build": "tsup src/server.ts --format esm,cjs --dts --out-dir dist",

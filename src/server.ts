@@ -5,23 +5,24 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
   IndividualComponentSchema,
   fetchComponentDetails,
-  fetchExampleComponents,
-  fetchExampleDetails,
   fetchUIComponents,
+  fetchTailGridsDocs,
+  fetchComponentCategories,
+  searchTailGridsDocs,
 } from "./utils/index.js";
 import { formatComponentName } from "./utils/formatters.js";
 import { componentCategories } from "./lib/categories.js";
 
 // Initialize the MCP Server
 const server = new McpServer({
-  name: "your-mcp-server",
-  version: "0.0.1",
+  name: "tailgrids-mcp-server",
+  version: "1.0.0",
 });
 
-// Register the main tool for getting all components
+// Register the main tool for getting all TailGrids components
 server.tool(
-  "getUIComponents",
-  "Provides a comprehensive list of all ui components.",
+  "getTailGridsComponents",
+  "Provides a comprehensive list of all TailGrids UI components organized by category.",
   {},
   async () => {
     try {
@@ -40,7 +41,7 @@ server.tool(
         content: [
           {
             type: "text",
-            text: "Failed to fetch components",
+            text: "Failed to fetch TailGrids components",
           },
         ],
         isError: true,
@@ -49,101 +50,124 @@ server.tool(
   }
 );
 
-function createComponentExampleRegistry(
-  exampleComponentList: Array<{
-    name: string;
-    registryDependencies?: string[];
-  }>
-): Map<string, string[]> {
-  const componentRegistry = new Map<string, string[]>();
+// Register tool for getting TailGrids documentation
+server.tool(
+  "getTailGridsDocs",
+  "Fetches TailGrids documentation content for installation and usage guides.",
+  {},
+  async () => {
+    try {
+      const docs = await fetchTailGridsDocs();
 
-  for (const exampleItem of exampleComponentList) {
-    if (
-      exampleItem.registryDependencies &&
-      Array.isArray(exampleItem.registryDependencies)
-    ) {
-      for (const dependencyUrl of exampleItem.registryDependencies) {
-        if (
-          typeof dependencyUrl === "string" &&
-          dependencyUrl.includes("your-project-url.com")
-        ) {
-          const nameExtraction = dependencyUrl.match(/\/r\/([^\/]+)$/);
-          if (nameExtraction && nameExtraction[1]) {
-            const extractedComponentName = nameExtraction[1];
-            if (!componentRegistry.has(extractedComponentName)) {
-              componentRegistry.set(extractedComponentName, []);
-            }
-            if (
-              !componentRegistry
-                .get(extractedComponentName)
-                ?.includes(exampleItem.name)
-            ) {
-              componentRegistry
-                .get(extractedComponentName)
-                ?.push(exampleItem.name);
-            }
-          }
-        }
-      }
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(docs, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: "Failed to fetch TailGrids documentation",
+          },
+        ],
+        isError: true,
+      };
     }
   }
-  return componentRegistry;
-}
+);
+
+// Register tool for getting component categories
+server.tool(
+  "getTailGridsCategories",
+  "Lists all available TailGrids component categories and their contents.",
+  {},
+  async () => {
+    try {
+      const categories = await fetchComponentCategories();
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(categories, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: "Failed to fetch TailGrids categories",
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+);
+
+// Register tool for searching documentation
+server.tool(
+  "searchTailGridsDocs",
+  "Search TailGrids documentation for specific topics or components.",
+  {
+    query: {
+      type: "string",
+      description: "Search query for TailGrids documentation",
+    },
+  },
+  async (args: { query: string }) => {
+    try {
+      const searchResults = await searchTailGridsDocs(args.query);
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(searchResults, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Failed to search TailGrids documentation for "${args.query}"`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+);
 
 async function fetchComponentsByCategory(
-  categoryComponents: string[],
-  allComponents: any[],
-  exampleNamesByComponent: Map<string, string[]>
+  categoryName: string,
+  categoryComponents: string[]
 ) {
   const componentResults = [];
 
   for (const componentName of categoryComponents) {
-    const component = allComponents.find((c) => c.name === componentName);
-    if (!component) continue;
-
     try {
-      const componentDetails = await fetchComponentDetails(componentName);
-      const componentContent = componentDetails.files[0]?.content;
-
-      const relevantExampleNames =
-        exampleNamesByComponent.get(componentName) || [];
-
-      // Generate installation instructions
-      const installInstructions = `You can install the component using  \
-      shadcn/ui CLI. For example, with npx: npx shadcn@latest add \
-      "https://your-project-url.com/r/${componentName}.json" (Rules: make sure the URL is wrapped in \
-      double quotes. Once installed, you can import the component like this: import { ${formatComponentName(
-        component.name
-      )} } from \
-      "@/components/ui/${componentName}";`;
-
-      const disclaimerText = `The code below is for context only. It helps you understand
-      the component's props, types, and behavior. After installing, the component
-      will be available for import via: import { ${formatComponentName(
-        component.name
-      )} } \
-      from "@/components/ui/${componentName}";`;
-
-      const exampleDetailsList = await Promise.all(
-        relevantExampleNames.map((name) => fetchExampleDetails(name))
-      );
-
-      const formattedExamples = exampleDetailsList
-        .filter((details) => details !== null)
-        .map((details) => ({
-          name: details.name,
-          type: details.type,
-          description: details.description,
-          content: details.files[0]?.content,
-        }));
+      const componentDetails = await fetchComponentDetails(componentName, categoryName);
 
       const validatedComponent = IndividualComponentSchema.parse({
-        name: component.name,
-        type: component.type,
-        description: component.description,
-        install: installInstructions,
-        content: componentContent && disclaimerText + componentContent,
-        examples: formattedExamples,
+        name: componentDetails.name,
+        type: componentDetails.type,
+        description: componentDetails.description,
+        category: componentDetails.category,
+        usage: componentDetails.usage,
+        installation: componentDetails.installation,
+        features: componentDetails.features,
+        formats: componentDetails.formats,
+        url: componentDetails.url,
       });
 
       componentResults.push(validatedComponent);
@@ -155,16 +179,8 @@ async function fetchComponentsByCategory(
   return componentResults;
 }
 
-// Registers tools for each component category
+// Registers tools for each TailGrids component category
 async function registerComponentsCategoryTools() {
-  const [components, allExampleComponents] = await Promise.all([
-    fetchUIComponents(),
-    fetchExampleComponents(),
-  ]);
-
-  const exampleNamesByComponent =
-    createComponentExampleRegistry(allExampleComponents);
-
   for (const [category, categoryComponents] of Object.entries(
     componentCategories
   )) {
@@ -172,14 +188,13 @@ async function registerComponentsCategoryTools() {
 
     server.tool(
       `get${category}`,
-      `Provides implementation details for ${componentNamesString} components.`,
+      `Provides TailGrids ${category} components: ${componentNamesString}. Shows usage instructions, features, and available formats.`,
       {},
       async () => {
         try {
           const categoryResults = await fetchComponentsByCategory(
-            categoryComponents,
-            components,
-            exampleNamesByComponent
+            category,
+            categoryComponents
           );
 
           return {
@@ -191,7 +206,7 @@ async function registerComponentsCategoryTools() {
             ],
           };
         } catch (error) {
-          let errorMessage = `Error processing ${category} components`;
+          let errorMessage = `Error processing TailGrids ${category} components`;
           if (error instanceof Error) {
             errorMessage += `: ${error.message}`;
           }

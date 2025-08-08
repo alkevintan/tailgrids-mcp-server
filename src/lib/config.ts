@@ -2,9 +2,12 @@
  *  General configuration for MCP service
  */
 export const mcpConfig = {
-  projectName: "mcp-starter",
-  // Using a real project URL (https://ui.stackzero.co) for demonstrations. Replace with your actual project URL.
-  baseUrl: "https://ui.stackzero.co",
-  registryUrl: "https://ui.stackzero.co/r",
-  registryFileUrl: "https://ui.stackzero.co/registry.json",
+  projectName: "tailgrids-mcp-server",
+  // TailGrids documentation and component URLs
+  baseUrl: "https://tailgrids.com",
+  docsUrl: "https://tailgrids.com/docs",
+  componentsUrl: "https://tailgrids.com/components",
+  // Since TailGrids doesn't have a registry API, we'll use web scraping
+  registryUrl: "https://tailgrids.com/components",
+  registryFileUrl: "https://tailgrids.com/components",
 };

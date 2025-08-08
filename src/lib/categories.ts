@@ -1,21 +1,96 @@
-// Component category definitions
+// TailGrids component category definitions
+// Based on TailGrids' six main categories
 
-// Added one example category for demonstration purposes
-// Feel free to add more categories and components as needed
-// This file defines the categories and components for the MCP registry
 export const componentCategories = {
-  Ratings: [
-    "star-rating-basic",
-    "star-rating-fractions",
-    "upvote-rating-basic",
-    "upvote-rating-animated",
-    "face-rating-basic",
-    "face-rating-gradient",
+  CoreComponents: [
+    "buttons",
+    "checkboxes", 
+    "accordions",
+    "alerts",
+    "badges",
+    "breadcrumbs",
+    "dropdowns",
+    "forms",
+    "inputs",
+    "labels",
+    "links",
+    "lists",
+    "progress-bars",
+    "radio-buttons",
+    "switches",
+    "tabs",
+    "tooltips"
   ],
-  AnotherSampleCateogory: [
-    // Example category for demonstration
-    "another-component-basic",
-    "another-component-advanced",
+  ApplicationUI: [
+    "blogs",
+    "cards", 
+    "contacts",
+    "footers",
+    "headers",
+    "modals",
+    "navbars",
+    "pagination",
+    "sidebars",
+    "tables",
+    "timelines"
   ],
-  // ...add more categories and components as needed
+  MarketingUI: [
+    "hero-sections",
+    "features",
+    "pricing-tables", 
+    "testimonials",
+    "call-to-action",
+    "about-sections",
+    "team-sections",
+    "contact-sections",
+    "newsletter-signup",
+    "social-proof",
+    "faq-sections",
+    "landing-page-headers"
+  ],
+  ECommerce: [
+    "product-grids",
+    "product-cards",
+    "checkout-forms",
+    "shopping-carts",
+    "product-details",
+    "category-filters",
+    "search-bars",
+    "wishlist",
+    "order-tracking",
+    "payment-forms",
+    "invoice-templates",
+    "product-reviews",
+    "comparison-tables",
+    "discount-banners",
+    "shipping-info",
+    "return-policy",
+    "customer-support"
+  ],
+  Dashboard: [
+    "charts",
+    "calendars", 
+    "profiles",
+    "menus",
+    "statistics-cards",
+    "data-tables",
+    "user-management",
+    "settings-panels",
+    "notification-panels",
+    "activity-feeds",
+    "file-managers",
+    "task-lists",
+    "analytics-widgets",
+    "report-generators",
+    "admin-headers",
+    "dashboard-sidebars"
+  ],
+  AIComponents: [
+    "ai-headers",
+    "ai-navbars",
+    "ai-generators",
+    "chat-interfaces",
+    "ai-features",
+    "machine-learning-showcases"
+  ]
 };

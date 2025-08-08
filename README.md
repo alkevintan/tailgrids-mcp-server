@@ -1,47 +1,62 @@
-# MCP Server Starter Template
+# TailGrids MCP Server
 
-A comprehensive starter template for building **Model Context Protocol (MCP) servers**, specifically designed for UI libraries and component registries. This template provides a robust foundation for creating MCP servers that can fetch, categorize, and provide component information to AI assistants like Claude.
+A **Model Context Protocol (MCP) server** for TailGrids, providing AI assistants like Claude with access to TailGrids' comprehensive UI component library and documentation.
 
-## 🌎 Real world example?
+## 🎯 What is this?
 
-Check out the [stackzero-labs/mcp](https://github.com/stackzero-labs/mcp) which uses this template to expose its UI components and blocks to AI models. You can also checkout the UI referenced project [stackzero/ui](https://github.com/stackzero-labs/ui)
+This MCP server enables AI assistants to help you find, understand, and implement TailGrids components. It provides access to:
+- 600+ TailGrids UI components across 6 categories
+- Component usage instructions and features
+- Installation and implementation guidance
+- Documentation search capabilities
 
 ## 🚀 Features
 
-- **Ready-to-use MCP server** with TypeScript support
-- **Component registry integration** for UI libraries
-- **Categorized component organization** with flexible category system
-- **Zod schema validation** for type safety
-- **Development tools** including hot reload and inspector
-- **Example implementation** using a real project URL for demonstration
-- **Extensible architecture** for custom component types and categories
+- **TailGrids Integration** - Direct access to TailGrids component library
+- **Categorized Components** - 6 main categories: Core, Application UI, Marketing UI, E-Commerce, Dashboard, AI Components  
+- **Documentation Access** - Search and retrieve TailGrids documentation
+- **Multi-format Support** - HTML, React, Vue, and Figma formats
+- **TypeScript Support** - Full type safety with Zod validation
+- **Development Tools** - Hot reload and MCP inspector for testing
 
 ## 📋 Prerequisites
 
-- Node.js 18 or higher
+- Node.js 18 or higher  
 - pnpm (recommended) or npm
-- Basic understanding of TypeScript and MCP
+- Claude Code CLI (for easy integration)
 
-## 🤝 Intended Use Cases
+## 🚀 Quick Start with Claude
 
-This template is specifically designed for libraries following the `registry` format (like `shadcn/ui`), making it ideal for:
-
-- UI component libraries
-- Design systems
-- Component registries that need to be accessible via AI assistants
-- Tools, utilities, and frameworks that require a structured way to expose UI components to AI models
-
-> Read more about components registries like shadcn/ui here [Component Registries](https://ui.shadcn.com/docs/registry).
-
-With some customizations however, it can be adapted for other types of MCP servers as well.
-
-## 🛠️ Installation
-
-1. Clone or download this template:
+The easiest way to add this MCP server to your project is using Claude Code:
 
 ```bash
-git clone https://github.com/mnove/mcp-starter.git
-cd mcp-starter
+# Add the TailGrids MCP server to your project
+claude mcp add tailgrids-server node /path/to/tailgrids-mcp-server/dist/server.js
+
+# Or add it locally to your user configuration
+claude mcp add --scope user tailgrids-server node /path/to/tailgrids-mcp-server/dist/server.js
+```
+
+**Note**: Make sure to build the project first (`pnpm run build`) before adding it to Claude.
+
+## 🤝 Use Cases
+
+Perfect for developers working with:
+
+- **TailGrids components** - Get instant access to component documentation
+- **Tailwind CSS projects** - Find the right TailGrids component for your needs  
+- **Web applications** - Discover components for dashboards, marketing sites, e-commerce
+- **AI-assisted development** - Let Claude help you implement TailGrids components
+
+## 🛠️ Manual Installation
+
+If you prefer to set up manually:
+
+1. Clone this repository:
+
+```bash
+git clone https://github.com/alkevintan/tailgrids-mcp-server.git
+cd tailgrids-mcp-server
 ```
 
 2. Install dependencies:
@@ -56,46 +71,35 @@ pnpm install
 pnpm run build
 ```
 
+4. Add to Claude manually by editing your MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "tailgrids-server": {
+      "command": "node",
+      "args": ["/absolute/path/to/tailgrids-mcp-server/dist/server.js"]
+    }
+  }
+}
+```
+
 ## ⚙️ Configuration
 
-### 1. Update Project Configuration
+This MCP server is pre-configured for TailGrids and ready to use out of the box. The configuration includes:
 
-Edit `src/lib/config.ts` to point to your own component registry:
+- **TailGrids URLs**: Points to `https://tailgrids.com/docs` and `https://tailgrids.com/components`
+- **Component Categories**: Pre-defined with TailGrids' 6 main categories
+- **Server Metadata**: Configured as `tailgrids-mcp-server`
 
-```typescript
-export const mcpConfig = {
-  projectName: "your-project-name",
-  // Replace with your actual project URL
-  baseUrl: "https://your-ui-library.com",
-  registryUrl: "https://your-ui-library.com/r",
-  registryFileUrl: "https://your-ui-library.com/registry.json",
-};
-```
+### Component Categories Included
 
-**Note**: This template currently uses `https://ui.stackzero.co` as a demonstration URL. You **must** replace this with your actual project URL for production use.
-
-### 2. Define Component Categories
-
-Customize `src/lib/categories.ts` to match your component structure:
-
-```typescript
-export const componentCategories = {
-  Buttons: ["button-primary", "button-secondary", "button-ghost"],
-  Forms: ["input-text", "input-email", "textarea"],
-  // Add your categories here
-};
-```
-
-### 3. Update Server Metadata
-
-Modify `src/server.ts` to customize your server information:
-
-```typescript
-const server = new McpServer({
-  name: "your-mcp-server-name",
-  version: "1.0.0",
-});
-```
+- **CoreComponents**: buttons, checkboxes, accordions, alerts, badges, etc.
+- **ApplicationUI**: blogs, cards, contacts, footers, headers, modals, etc.  
+- **MarketingUI**: hero-sections, features, pricing-tables, testimonials, etc.
+- **ECommerce**: product-grids, checkout-forms, shopping-carts, etc.
+- **Dashboard**: charts, calendars, profiles, statistics-cards, etc.
+- **AIComponents**: ai-headers, ai-navbars, chat-interfaces, etc.
 
 ## 🏃‍♂️ Development
 
@@ -122,40 +126,46 @@ Make sure you auth token is present in the inspector url, otherwise the connecti
 
 ## 📚 Available Tools
 
-The MCP server provides the following tools:
+The MCP server provides the following tools for AI assistants:
 
-### `getUIComponents`
+### Main Tools
 
-Returns a comprehensive list of all UI components from your registry.
+- **`getTailGridsComponents`** - Returns all TailGrids components organized by category
+- **`getTailGridsDocs`** - Fetches TailGrids documentation content
+- **`getTailGridsCategories`** - Lists all component categories with descriptions  
+- **`searchTailGridsDocs`** - Search documentation for specific topics
 
 ### Category-specific Tools
 
-Dynamic tools are created for each category defined in `componentCategories`:
+Dynamic tools for each TailGrids category:
 
-- `getButtons` - Get all button components
-- `getForms` - Get all form components
-- etc.
+- **`getCoreComponents`** - Basic UI elements (buttons, forms, alerts, etc.)
+- **`getApplicationUI`** - App components (navbars, cards, tables, etc.) 
+- **`getMarketingUI`** - Marketing sections (hero, pricing, testimonials, etc.)
+- **`getECommerce`** - E-commerce components (product grids, checkout, etc.)
+- **`getDashboard`** - Dashboard elements (charts, analytics, profiles, etc.)
+- **`getAIComponents`** - AI-focused components (chat interfaces, generators, etc.)
 
-Each category tool provides:
+Each tool provides:
 
-- Component implementation details
-- Usage examples
-- Installation instructions
-- Related components
+- Component descriptions and usage instructions
+- Available formats (HTML, React, Vue, Figma)
+- TailGrids website links for implementation
+- Installation guidance
 
 ## 🏗️ Project Structure
 
 ```
-mcp-starter/
+tailgrids-mcp-server/
 ├── src/
 │   ├── server.ts              # Main MCP server implementation
 │   ├── lib/
-│   │   ├── config.ts          # Configuration settings
-│   │   └── categories.ts      # Component categories
+│   │   ├── config.ts          # TailGrids configuration
+│   │   └── categories.ts      # TailGrids component categories
 │   └── utils/
-│       ├── api.ts             # API fetching utilities
+│       ├── api.ts             # TailGrids API utilities
 │       ├── formatters.ts      # Data formatting helpers
-│       ├── schemas.ts         # Zod validation schemas
+│       ├── schemas.ts         # Zod validation schemas  
 │       └── index.ts           # Utility exports
 ├── dist/                      # Built files
 ├── package.json
@@ -164,139 +174,109 @@ mcp-starter/
 
 ## 🔧 Customization
 
-### Adding New Component Types
+### Adding New TailGrids Components
 
-1. **Update schemas** in `src/utils/schemas.ts`:
-
-```typescript
-export const CustomComponentSchema = z.object({
-  name: z.string(),
-  category: z.string(),
-  // Add your fields
-});
-```
-
-2. **Add API functions** in `src/utils/api.ts`:
-
-```typescript
-export async function fetchCustomComponents() {
-  // Your implementation
-}
-```
-
-3. **Register new tools** in `src/server.ts`:
-
-```typescript
-server.tool("getCustomComponents" /*...*/);
-```
-
-### Extending Categories
-
-Simply add new categories to `src/lib/categories.ts`:
+To add new components to existing categories, edit `src/lib/categories.ts`:
 
 ```typescript
 export const componentCategories = {
-  // Existing categories...
-  Navigation: ["navbar", "sidebar", "breadcrumbs"],
-  DataDisplay: ["table", "card", "badge"],
+  CoreComponents: [
+    "buttons",
+    "checkboxes", 
+    "your-new-component",  // Add here
+    // ... existing components
+  ],
+  // ... other categories
 };
 ```
 
-The server will automatically create tools for new categories.
+### Creating New Categories
 
-### Why categories?
+Add a new category to `src/lib/categories.ts`:
 
-Categories help organize components logically, making it easier for AI assistants to find and suggest relevant components based.
-Also, some models and IDE have a limit on the number of tools they can handle, so categorizing helps to keep the number of tools manageable.
-
-You can customize your categories however you want, depending on your cases. If you do not have many tools, then you could also consider not using categories at all.
-
-## 📖 Registry Format
-
-Your component registry should follow this structure:
-
-### Registry File (`registry.json`)
-
-```json
-{
-  "registry": [
-    {
-      "name": "button-primary",
-      "type": "registry:component",
-      "description": "Primary button component"
-    }
-  ]
-}
+```typescript
+export const componentCategories = {
+  // ... existing categories
+  YourNewCategory: [
+    "component-one",
+    "component-two",
+    "component-three"
+  ],
+};
 ```
 
-### Component Details (`/r/{component-name}.json`)
+The server will automatically create a `getYourNewCategory` tool.
 
-```json
-{
-  "name": "button-primary",
-  "type": "registry:component",
-  "files": [
-    {
-      "content": "// Component implementation"
-    }
-  ]
-}
-```
+### Why Categories?
+
+Categories help organize TailGrids' 600+ components logically:
+- Makes it easier for AI assistants to find relevant components
+- Prevents overwhelming the AI with too many tools at once
+- Mirrors TailGrids' own organization structure
+- Enables focused searches within specific component types
+
+## 🌐 How it Works
+
+Since TailGrids doesn't provide a traditional API, this MCP server:
+
+1. **Organizes Components** - Maps TailGrids' component structure into categories
+2. **Provides Guidance** - Gives usage instructions and implementation tips  
+3. **Links to Source** - Directs to TailGrids website for actual component code
+4. **Searches Docs** - Enables documentation search and retrieval
+5. **Formats Information** - Structures data for easy AI consumption
 
 ## 🚀 Deployment
 
-### As a Local MCP Server
+### Using Claude Code (Recommended)
+
+```bash
+# Build first
+pnpm run build
+
+# Add to Claude
+claude mcp add tailgrids-server node /absolute/path/to/tailgrids-mcp-server/dist/server.js
+
+# Or add to user configuration  
+claude mcp add --scope user tailgrids-server node /absolute/path/to/tailgrids-mcp-server/dist/server.js
+```
+
+### Manual Configuration
 
 1. Build the project:
-
 ```bash
 pnpm run build
 ```
 
-2. Configure in your MCP client (e.g., Claude Desktop):
-
+2. Add to your MCP client configuration:
 ```json
 {
   "mcpServers": {
-    "your-mcp-server": {
-      "command": "node",
-      "args": ["/path/to/mcp-starter/dist/server.js"]
+    "tailgrids-server": {
+      "command": "node", 
+      "args": ["/absolute/path/to/tailgrids-mcp-server/dist/server.js"]
     }
   }
 }
 ```
 
-### As an NPM Package
-
-You can also publish this template as an NPM package for easy installation in other projects.
-
-1. Update `package.json` with your details
-2. Build and publish:
-
-```bash
-pnpm run build
-npm publish
-```
-
 ## 🤝 Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to contribute to this project.
+Contributions are welcome! Please feel free to submit issues or pull requests.
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🤝 Contact
-
-Marcello - [@mnove](https://github.com/mnove)
-
 ## 🙏 Acknowledgments
 
 - Built with [Model Context Protocol SDK](https://github.com/modelcontextprotocol/sdk)
-- Originally inspired by magic-ui MCP server
-- Inspired by the need for better AI-component integration
+- Inspired by the original MCP server starter template
+- TailGrids for providing an excellent component library
 - Thanks to the MCP community for their contributions
 
----
+## 🔗 Links
 
-**⚠️ Important**: Remember to replace `https://ui.stackzero.co` with your actual project URL before using this template in production!
+- [TailGrids Website](https://tailgrids.com)
+- [TailGrids Documentation](https://tailgrids.com/docs)  
+- [Model Context Protocol](https://github.com/modelcontextprotocol)
+- [Claude Code CLI](https://github.com/anthropics/claude-code)
