@@ -121,8 +121,7 @@ pnpm run build
 pnpm run inspect
 ```
 
-This opens the MCP Inspector to test your server tools interactively.
-Make sure you auth token is present in the inspector url, otherwise the connection will fail. 
+This opens the MCP Inspector to test your TailGrids MCP server tools interactively. You can test the `getTailGridsComponents`, category-specific tools, and documentation search functionality. 
 
 ## 📚 Available Tools
 
