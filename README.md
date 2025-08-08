@@ -189,28 +189,19 @@ export const componentCategories = {
 };
 ```
 
-### Creating New Categories
+### Why These Categories?
 
-Add a new category to `src/lib/categories.ts`:
+The 6 categories are based on TailGrids' official organization:
+- **CoreComponents** - Basic UI building blocks
+- **ApplicationUI** - Components for web applications  
+- **MarketingUI** - Landing page and marketing components
+- **ECommerce** - Online store and shopping components
+- **Dashboard** - Admin and analytics interface components
+- **AIComponents** - AI and machine learning focused components
 
-```typescript
-export const componentCategories = {
-  // ... existing categories
-  YourNewCategory: [
-    "component-one",
-    "component-two",
-    "component-three"
-  ],
-};
-```
-
-The server will automatically create a `getYourNewCategory` tool.
-
-### Why Categories?
-
-Categories help organize TailGrids' 600+ components logically:
+This structure:
 - Makes it easier for AI assistants to find relevant components
-- Prevents overwhelming the AI with too many tools at once
+- Prevents overwhelming the AI with too many tools at once  
 - Mirrors TailGrids' own organization structure
 - Enables focused searches within specific component types
 
